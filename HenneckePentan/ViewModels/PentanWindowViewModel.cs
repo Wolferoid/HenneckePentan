@@ -14,6 +14,7 @@
         private readonly IUIVisualizerService _uiVisualizerService;
         private readonly IMessageService _messageService;
         private bool isConnected;
+        private bool isEnabled;
         #endregion
         public PentanWindowViewModel(/*Pentan pentan, IUIVisualizerService uiVisualizerService, IMessageService messageService*/)
         {
@@ -25,7 +26,11 @@
             //_uiVisualizerService = uiVisualizerService;
             //_messageService = messageService;
             Connect = new Command(OnConnectExecute);
+            PidEnable = new Command(OnPidEnableExecute);
+            RecipeWrite = new Command(OnRecipeWriteExecute);
+            CurrentRead = new Command(OnCurrentReadExecute);
             isConnected = false;
+            isEnabled = false;
         }
 
         public override string Title { get { return "Hennecke Pentan Recipe"; } }
@@ -36,8 +41,8 @@
 
         #region Properties
         /// <summary>
-            /// BtnConnectText the property value.
-            /// </summary>
+        /// BtnConnectText the property value.
+        /// </summary>
         public string BtnConnectText
         {
             get { return GetValue<string>(BtnConnectTextProperty); }
@@ -48,6 +53,20 @@
         /// Register the BtnConnectText property so it is known in the class.
         /// </summary>
         public static readonly PropertyData BtnConnectTextProperty = RegisterProperty("BtnConnectText", typeof(string), "Connect");
+
+        /// <summary>
+            /// BtnPidEnableText the property value.
+            /// </summary>
+        public string BtnPidEnableText
+        {
+            get { return GetValue<string>(BtnPidEnableTextProperty); }
+            set { SetValue(BtnPidEnableTextProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the BtnPidEnableText property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData BtnPidEnableTextProperty = RegisterProperty("BtnPidEnableText", typeof(string), "Enable");
 
         /// <summary>
         /// Pentan property value.
@@ -120,9 +139,54 @@
             }
         }
 
+        /// <summary>
+        /// Gets the RecipeWrite command.
+        /// </summary>
+        public Command RecipeWrite { get; private set; }
+
+        /// <summary>
+        /// Method to invoke when the RecipeWrite command is executed.
+        /// </summary>
+        private void OnRecipeWriteExecute()
+        {
+            // TODO: Handle command logic here
+        }
+
+        /// <summary>
+            /// Gets the CurrentRead command.
+            /// </summary>
+        public Command CurrentRead { get; private set; }
+        
+        /// <summary>
+        /// Method to invoke when the CurrentRead command is executed.
+        /// </summary>
+        private void OnCurrentReadExecute()
+        {
+            // TODO: Handle command logic here
+        }
+
+        /// <summary>
+            /// Gets the PidEnable command.
+            /// </summary>
+        public Command PidEnable { get; private set; }
+
+        /// <summary>
+        /// Method to invoke when the PidEnable command is executed.
+        /// </summary>
+        private void OnPidEnableExecute()
+        {
+            if (!isEnabled)
+            {
+                isEnabled = true;
+                BtnPidEnableText = "Disable";
+            }
+            else
+            {
+                isEnabled = false;
+                BtnPidEnableText = "Enable";
+            }
+        }
         #endregion
-
-
 
         protected override async Task InitializeAsync()
         {

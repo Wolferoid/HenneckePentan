@@ -11,7 +11,7 @@ namespace HenneckePentan.Models
         private string statusBar;
 
         public string StatusBar
-        { get { return "STATUS BAR WIL BE HERE"; }
+        { get { return "STATUS BAR WILL BE HERE"; }
           set { statusBar = value; }
         }
     }
