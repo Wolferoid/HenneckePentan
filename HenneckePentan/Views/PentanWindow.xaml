@@ -1,0 +1,20 @@
+﻿<catel:Window x:Class="HenneckePentan.Views.PentanWindow"
+              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+              xmlns:catel="http://catel.codeplex.com"
+              ResizeMode="CanResize">
+
+    <catel:StackGrid x:Name="LayoutRoot">
+        <catel:StackGrid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </catel:StackGrid.RowDefinitions>
+
+        <Label Content="{Binding Title}"  Grid.Row="1"/>
+        <Label Content="{Binding TestLabel}"  Grid.Row="2"/>
+        <Label Content="{Binding StatusBar}" Grid.Row="4"/>
+        <Button Command="{Binding Connect}" Content="{Binding BtnConnectText}" Grid.Row="3" Margin="10,465,-10,-465" />
+    </catel:StackGrid>
+</catel:Window>
