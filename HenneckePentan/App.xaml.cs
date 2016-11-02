@@ -8,10 +8,11 @@
     using Catel.Logging;
     using Catel.Reflection;
     using Catel.Windows;
-
-    /// <summary>
-    /// Interaction logic for App.xaml
-    /// </summary>
+    using Catel.Services;
+    using ViewModels;
+    using Views;/// <summary>
+                /// Interaction logic for App.xaml
+                /// </summary>
     public partial class App : Application
     {
         private static readonly ILog Log = LogManager.GetCurrentClassLogger();
@@ -21,7 +22,9 @@
 #if DEBUG
             LogManager.AddDebugListener();
 #endif
-
+            //var serviceLocator = ServiceLocator.Default;
+            //var uiVisualizerService = serviceLocator.ResolveType<IUIVisualizerService>();
+            //uiVisualizerService.Register(typeof(PentanViewModel), typeof(PentanWindow));
             Log.Info("Starting application");
 
             // To force the loading of all assemblies at startup, uncomment the lines below:

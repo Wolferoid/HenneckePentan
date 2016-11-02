@@ -1,0 +1,36 @@
+﻿<catel:UserControl x:Class="HenneckePentan.Views.PentanView"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:catel="http://catel.codeplex.com"
+                   xmlns:views="clr-namespace:HenneckePentan.Views">
+
+    <catel:StackGrid>
+        <catel:StackGrid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </catel:StackGrid.RowDefinitions>
+        <catel:StackGrid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+        </catel:StackGrid.ColumnDefinitions>
+
+        <Button Grid.ColumnSpan="2" Content="{Binding BtnConnectText}" Command="{Binding Connect}" Height="35" Width="100" />
+        <Button Grid.ColumnSpan="2" Content="{Binding BtnPidText}" Command="{Binding Pid}" Height="35" Width="100" />
+        <Label Content="Рецепт" />
+        <TextBox Text="{Binding RecipeValue}" Width="70" />
+        <Label Content="грамм/сек" />
+        <Button Content="Записать" Command="{Binding RecipeWrite}" Width="70" />
+        <Label Content="Текущее" />
+        <TextBox Text="{Binding CurrentValue}" Width="70" />
+        <Label Content="грамм/сек" />
+        <Button Content="Считать" Command="{Binding CurrentRead}" Width="70" />
+        <Label Grid.ColumnSpan="4" Content="{Binding StatusBarText}" Height="Auto"/>
+
+
+    </catel:StackGrid>
+    
+</catel:UserControl>

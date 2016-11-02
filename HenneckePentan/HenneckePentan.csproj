@@ -73,6 +73,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Views\PentanView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\PentanWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -89,7 +93,11 @@
     <Compile Include="Services\ErrorDescription.cs" />
     <Compile Include="Services\Interfaces\IPentanService.cs" />
     <Compile Include="Services\PentanService.cs" />
+    <Compile Include="ViewModels\PentanViewModel.cs" />
     <Compile Include="ViewModels\PentanWindowViewModel.cs" />
+    <Compile Include="Views\PentanView.xaml.cs">
+      <DependentUpon>PentanView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\PentanWindow.xaml.cs">
       <DependentUpon>PentanWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

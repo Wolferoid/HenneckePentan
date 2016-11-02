@@ -17,18 +17,6 @@ namespace HenneckePentan.Services
         bool isConnected;
         #endregion
 
-        #region Properties
-        public string Status
-        {
-            get { return strStatus; }
-        }
-        #endregion
-
-
-        #region Constructor
-        
-        #endregion
-
         public string Connect()
         {
             ErrorDescription error = new ErrorDescription();
@@ -44,7 +32,7 @@ namespace HenneckePentan.Services
                 // Ensure IP is responding
                 if (plc.IsAvailable)
                 {
-                   status = error.GetText(plc.Open());
+                    status = error.GetText(plc.Open());
                 }
                 else
                 {
@@ -60,28 +48,44 @@ namespace HenneckePentan.Services
             return status;
         }
 
-        public void Disconnect()
+        public string Disconnect()
         {
+            string status = null;
             if (plc != null && plc.IsConnected)
             {
                 plc.Close();
 
                 isConnected = false;
 
-                strStatus = "STATUS: Connection is closed.";
+                status = "СТАТУС: Соединение разорвано.";
             }
             else
             {
-                strStatus = "STATUS: Disconnect button clicked, but something wrong.";
+                status = "СТАТУС: Ошибка разрыва соединения.";
             }
+            return status;
         }
 
         #region Template
         public void WriteRecipe()
         { }
 
-        public void ReadRecipe()
-        { }
+        public string ReadCurrent()
+        {
+            float value = 0.0f;
+            if (plc != null && plc.IsConnected)
+            {
+                ErrorDescription error = new ErrorDescription();
+                var obj = plc.Read("MD270");
+                value = Convert.ToSingle(obj);
+                
+            }
+            else
+            {
+                //status = "ОШИБКА: Соединение не установлено.";
+            }
+            return value.ToString();
+        }
 
         public void WriteSettings()
         { }
@@ -89,10 +93,35 @@ namespace HenneckePentan.Services
         public void ReadSettings()
         { }
 
-        public void PidEnable()
-        { }
-        public void PidDisable()
-        { }
+        public string PidEnable()
+        {
+            string status = null;
+            if (plc != null && plc.IsConnected)
+            {
+                ErrorDescription error = new ErrorDescription();
+                status  = error.GetText(plc.Write("M239.0", 1));
+               
+            }
+            else
+            {
+                status = "ОШИБКА: Соединение не установлено.";
+            }
+            return status;
+        }
+        public string PidDisable()
+        {
+            string status = null;
+            if (plc != null && plc.IsConnected)
+            {
+                ErrorDescription error = new ErrorDescription();
+                status = error.GetText(plc.Write("M239.0", 0));
+            }
+            else
+            {
+                status = "ОШИБКА: Соединение не установлено.";
+            }
+            return status;
+        }
         #endregion
     }
 }

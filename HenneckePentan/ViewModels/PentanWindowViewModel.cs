@@ -11,38 +11,57 @@
     public class PentanWindowViewModel : ViewModelBase
     {
         #region Fields
-        private readonly IUIVisualizerService _uiVisualizerService;
-        private readonly IMessageService _messageService;
-        private bool isConnected;
-        private bool isEnabled;
+        //private readonly IUIVisualizerService _uiVisualizerService;
+        //private readonly IMessageService _messageService;
         #endregion
-        public PentanWindowViewModel(/*Pentan pentan, IUIVisualizerService uiVisualizerService, IMessageService messageService*/)
+        public PentanWindowViewModel()
         {
-            //Argument.IsNotNull(() => pentan);
-            //Argument.IsNotNull(() => uiVisualizerService);
-            //Argument.IsNotNull(() => messageService);
-
-            //Pentan = pentan;
-            //_uiVisualizerService = uiVisualizerService;
-            //_messageService = messageService;
-            Connect = new Command(OnConnectExecute);
-            PidEnable = new Command(OnPidEnableExecute);
-            RecipeWrite = new Command(OnRecipeWriteExecute);
-            CurrentRead = new Command(OnCurrentReadExecute);
-            isConnected = false;
-            isEnabled = false;
+            Test = new Command(OnTestExecute);
         }
 
-        public override string Title { get { return "Hennecke Pentan Recipe"; } }
+        //public override string Title { get { return "Hennecke Pentan Recipe"; } }
 
         // TODO: Register models with the vmpropmodel codesnippet
         // TODO: Register view model properties with the vmprop or vmpropviewmodeltomodel codesnippets
         // TODO: Register commands with the vmcommand or vmcommandwithcanexecute codesnippets
 
+        #region Injection
+        /// <summary>
+        /// Gets or sets the Pentan.
+        /// </summary>
+        [Model]
+        public Pentan Pentan
+        {
+            get { return GetValue<Pentan>(PentanProperty); }
+            private set { SetValue(PentanProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the Pentan property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData PentanProperty = RegisterProperty("Pentan", typeof(Pentan));
+        #endregion
+
         #region Properties
         /// <summary>
-        /// BtnConnectText the property value.
+        /// Gets or sets the StatusBarText.
         /// </summary>
+        [ViewModelToModel("Pentan")]
+        public string StatusBarText
+        {
+            get { return GetValue<string>(StatusBarTextProperty); }
+            set { SetValue(StatusBarTextProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the StatusBarText property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData StatusBarTextProperty = RegisterProperty("StatusBarText", typeof(string));
+
+        /// <summary>
+        /// Gets or sets the BtnConnectText.
+        /// </summary>
+        [ViewModelToModel("Pentan")]
         public string BtnConnectText
         {
             get { return GetValue<string>(BtnConnectTextProperty); }
@@ -52,139 +71,66 @@
         /// <summary>
         /// Register the BtnConnectText property so it is known in the class.
         /// </summary>
-        public static readonly PropertyData BtnConnectTextProperty = RegisterProperty("BtnConnectText", typeof(string), "Connect");
+        public static readonly PropertyData BtnConnectTextProperty = RegisterProperty("BtnConnectText", typeof(string));
 
         /// <summary>
-            /// BtnPidEnableText the property value.
-            /// </summary>
-        public string BtnPidEnableText
-        {
-            get { return GetValue<string>(BtnPidEnableTextProperty); }
-            set { SetValue(BtnPidEnableTextProperty, value); }
-        }
-
-        /// <summary>
-        /// Register the BtnPidEnableText property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData BtnPidEnableTextProperty = RegisterProperty("BtnPidEnableText", typeof(string), "Enable");
-
-        /// <summary>
-        /// Pentan property value.
-        /// </summary>
-        [Model]
-        public Pentan Pentan
-        {
-            get { return GetValue<Pentan>(PentanProperty); }
-            set { SetValue(PentanProperty, value); }
-        }
-
-        /// <summary>
-        /// Register the Pentan property so it is known in the class.
-        /// </summary>
-        public static readonly PropertyData PentanProperty = RegisterProperty("Pentan", typeof(Pentan), null);
-        /// <summary>
-        /// Status bar property value.
+        /// Gets or sets the BtnPidText.
         /// </summary>
         [ViewModelToModel("Pentan")]
-        public string StatusBar
+        public string BtnPidText
         {
-            get { return GetValue<string>(StatusBarProperty); }
-            set { SetValue(StatusBarProperty, value); }
+            get { return GetValue<string>(BtnPidTextProperty); }
+            set { SetValue(BtnPidTextProperty, value); }
         }
 
         /// <summary>
-        /// Register the StatusBar property so it is known in the class.
+        /// Register the BtnPidText property so it is known in the class.
         /// </summary>
-        public static readonly PropertyData StatusBarProperty = RegisterProperty("StatusBar", typeof(string), "Default status bar definition");
+        public static readonly PropertyData BtnPidTextProperty = RegisterProperty("BtnPidText", typeof(string));
 
         /// <summary>
-        /// TestLabel property value.
+        /// Gets or sets the CurrentValue.
         /// </summary>
-        public string TestLabel
+        [ViewModelToModel("Pentan")]
+        public string CurrentValue
         {
-            get { return GetValue<string>(TestLabelProperty); }
-            set { SetValue(TestLabelProperty, value); }
+            get { return GetValue<string>(CurrentValueProperty); }
+            set { SetValue(CurrentValueProperty, value); }
         }
 
         /// <summary>
-        /// Register the TestLabel property so it is known in the class.
+        /// Register the CurrentValue property so it is known in the class.
         /// </summary>
-        public static readonly PropertyData TestLabelProperty = RegisterProperty("TestLabel", typeof(string), "Default test label definition");
+        public static readonly PropertyData CurrentValueProperty = RegisterProperty("CurrentValue", typeof(string));
+
+        /// <summary>
+        /// Gets or sets the RecipeValue.
+        /// </summary>
+        [ViewModelToModel("Pentan")]
+        public string RecipeValue
+        {
+            get { return GetValue<string>(RecipeValueProperty); }
+            set { SetValue(RecipeValueProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the RecipeValue property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData RecipeValueProperty = RegisterProperty("RecipeValue", typeof(string));
         #endregion
 
         #region Commands
         /// <summary>
-        /// Gets the Connect command.
+        /// Gets the Test command.
         /// </summary>
-        public Command Connect { get; private set; }
+        public Command Test { get; private set; }
 
         /// <summary>
-        /// Method to invoke when the Connect command is executed.
+        /// Method to invoke when the Test command is executed.
         /// </summary>
-        private void OnConnectExecute()
+        private void OnTestExecute()
         {
-            PentanService pentanService = new PentanService();
-            if (!isConnected)
-            {
-                StatusBar = pentanService.Connect();
-                BtnConnectText = "Disconnect";
-                isConnected = true;
-            }
-            else
-            {
-                pentanService.Disconnect();
-                BtnConnectText = "Connect";
-                StatusBar = "STATUS: Disconnected.";
-                isConnected = false;
-            }
-        }
 
-        /// <summary>
-        /// Gets the RecipeWrite command.
-        /// </summary>
-        public Command RecipeWrite { get; private set; }
-
-        /// <summary>
-        /// Method to invoke when the RecipeWrite command is executed.
-        /// </summary>
-        private void OnRecipeWriteExecute()
-        {
-            // TODO: Handle command logic here
-        }
-
-        /// <summary>
-            /// Gets the CurrentRead command.
-            /// </summary>
-        public Command CurrentRead { get; private set; }
-        
-        /// <summary>
-        /// Method to invoke when the CurrentRead command is executed.
-        /// </summary>
-        private void OnCurrentReadExecute()
-        {
-            // TODO: Handle command logic here
-        }
-
-        /// <summary>
-            /// Gets the PidEnable command.
-            /// </summary>
-        public Command PidEnable { get; private set; }
-
-        /// <summary>
-        /// Method to invoke when the PidEnable command is executed.
-        /// </summary>
-        private void OnPidEnableExecute()
-        {
-            if (!isEnabled)
-            {
-                isEnabled = true;
-                BtnPidEnableText = "Disable";
-            }
-            else
-            {
-                isEnabled = false;
-                BtnPidEnableText = "Enable";
-            }
         }
         #endregion
 

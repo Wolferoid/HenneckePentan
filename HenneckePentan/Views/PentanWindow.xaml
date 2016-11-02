@@ -2,29 +2,18 @@
               xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
               xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
               xmlns:catel="http://catel.codeplex.com"
-              ResizeMode="CanResize">
+              xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+              xmlns:views="clr-namespace:HenneckePentan.Views"
+              
+              ResizeMode="NoResize" Width="350" Height="250"> 
 
-    <catel:StackGrid x:Name="LayoutRoot">
+    <catel:StackGrid x:Name="LayoutRoot" Width="350" Height="250">
         <catel:StackGrid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
         </catel:StackGrid.RowDefinitions>
-
-        <Label Content="{Binding Title}" Margin="0,4,0,24" Grid.Row="2" />
-        <Label Content="{Binding TestLabel}"  />
-        <Button Command="{Binding Connect}" Content="{Binding BtnConnectText}" Height="35" Margin="5,0,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" />
-        <Button Command="{Binding PidEnable}" Content="{Binding BtnPidEnableText}" Height="35" Margin="5,0,0,0" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="70" />
-        <TextBox Text="{Binding RecipeValue}" />
-        <Button Command="{Binding RecipeWrite}" Content="Write" Height="35" Margin="5,0,0,0" HorizontalAlignment="Left" Width="70" Grid.Row="3" Grid.Column="2"/>
-        <TextBox Text="{Binding CurrentValue}" />
-        <Button Command="{Binding CurrentRead}" Content="Read" Height="35" Margin="5,0,0,0" HorizontalAlignment="Left" Width="70"/>
-        <Label Content="{Binding StatusBar}" VerticalAlignment="Bottom" />
+        <views:PentanView/>
     </catel:StackGrid>
 </catel:Window>
