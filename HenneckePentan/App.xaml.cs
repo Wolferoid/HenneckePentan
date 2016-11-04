@@ -27,6 +27,11 @@
             //uiVisualizerService.Register(typeof(PentanViewModel), typeof(PentanWindow));
             Log.Info("Starting application");
 
+            /// Языковые настройки, точка вместо запятой при вводе дробных чисел
+            //System.Globalization.CultureInfo customCulture = (System.Globalization.CultureInfo)System.Threading.Thread.CurrentThread.CurrentCulture.Clone();
+            //customCulture.NumberFormat.NumberDecimalSeparator = ".";
+            //System.Threading.Thread.CurrentThread.CurrentCulture = customCulture;
+            
             // To force the loading of all assemblies at startup, uncomment the lines below:
 
             //Log.Info("Preloading assemblies");

@@ -10,6 +10,7 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </catel:StackGrid.RowDefinitions>
         <catel:StackGrid.ColumnDefinitions>
             <ColumnDefinition Width="Auto" />
@@ -18,17 +19,25 @@
             <ColumnDefinition Width="Auto" />
         </catel:StackGrid.ColumnDefinitions>
 
-        <Button Grid.ColumnSpan="2" Content="{Binding BtnConnectText}" Command="{Binding Connect}" Height="35" Width="100" />
-        <Button Grid.ColumnSpan="2" Content="{Binding BtnPidText}" Command="{Binding Pid}" Height="35" Width="100" />
+        <Button Grid.ColumnSpan="2" Content="{Binding BtnConnectText}" Command="{Binding Connect}" Background="{Binding BtnConnectColor}" Height="35" Width="100" />
+        <Button Grid.ColumnSpan="3" Content="{Binding BtnPidText}" Command="{Binding Pid}" Background="{Binding BtnPidColor}" Height="35" Width="100" />
+        
         <Label Content="Рецепт" />
-        <TextBox Text="{Binding RecipeValue}" Width="70" />
+        <TextBox Text="{Binding RecipeValue}" Width="70" TextAlignment="Center" />
         <Label Content="грамм/сек" />
         <Button Content="Записать" Command="{Binding RecipeWrite}" Width="70" />
+        
         <Label Content="Текущее" />
-        <TextBox Text="{Binding CurrentValue}" Width="70" />
+        <TextBox Text="{Binding CurrentValue}" Width="70" TextAlignment="Center" />
         <Label Content="грамм/сек" />
-        <Button Content="Считать" Command="{Binding CurrentRead}" Width="70" />
-        <Label Grid.ColumnSpan="4" Content="{Binding StatusBarText}" Height="Auto"/>
+        <Label />
+        
+        <Label Content="Насос" />
+        <TextBox Text="{Binding ReadPumpValue}" Width="70" TextAlignment="Center" />
+        <Label Content="%" />
+        <Label />
+        <!--<Button Content="Контроль" Command="{Binding Monitoring}" Width="70" />-->
+        <Label Grid.ColumnSpan="4" Content="{Binding StatusBarText}" ToolTip="{Binding StatusBarText}" Margin="0,0,0,0" Height="Auto" Width="334" HorizontalAlignment="Stretch"/>
 
 
     </catel:StackGrid>

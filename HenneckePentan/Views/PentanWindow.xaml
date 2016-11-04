@@ -5,9 +5,9 @@
               xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
               xmlns:views="clr-namespace:HenneckePentan.Views"
               
-              ResizeMode="NoResize" Width="350" Height="250"> 
+              ResizeMode="NoResize" Width="400" Height="250" Background="DarkGray"> 
 
-    <catel:StackGrid x:Name="LayoutRoot" Width="350" Height="250">
+    <catel:StackGrid x:Name="LayoutRoot" Width="400" Height="250" >
         <catel:StackGrid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />

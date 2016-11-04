@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Timers;
 using System.Threading.Tasks;
 
 namespace HenneckePentan.ViewModels
@@ -12,15 +13,13 @@ namespace HenneckePentan.ViewModels
     using Models;
     using S7.Net;
     using Services;
+    using System.Windows.Media;
     public class PentanViewModel : ViewModelBase
     {
-        bool isConnected;
-        bool isEnabled;
         PentanService pentanService;
+        Timer monitorTimer;
         public PentanViewModel()
         {
-            isConnected = false;
-            isEnabled = false;
             Connect = new Command(OnConnectExecute);
             Pid = new Command(OnPidExecute);
             CurrentRead = new Command(OnCurrentReadExecute);
@@ -71,6 +70,20 @@ namespace HenneckePentan.ViewModels
         }
 
         /// <summary>
+            /// Gets or sets the BtnConnectColor.
+            /// </summary>
+        public string BtnConnectColor
+        {
+            get { return GetValue<string>(BtnConnectColorProperty); }
+            set { SetValue(BtnConnectColorProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the BtnConnectColor property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData BtnConnectColorProperty = RegisterProperty("BtnConnectColor", typeof(string), Colors.Aqua.ToString());
+
+        /// <summary>
         /// Register the BtnConnectText property so it is known in the class.
         /// </summary>
         public static readonly PropertyData BtnConnectTextProperty = RegisterProperty("BtnConnectText", typeof(string), "ПОДКЛЮЧИТЬ");
@@ -89,6 +102,20 @@ namespace HenneckePentan.ViewModels
         /// Register the BtnPidText property so it is known in the class.
         /// </summary>
         public static readonly PropertyData BtnPidTextProperty = RegisterProperty("BtnPidText", typeof(string), "ВКЛЮЧИТЬ");
+
+        /// <summary>
+            /// Gets or sets the BtnPidColor.
+            /// </summary>
+        public string BtnPidColor
+        {
+            get { return GetValue<string>(BtnPidColorProperty); }
+            set { SetValue(BtnPidColorProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the BtnPidColor property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData BtnPidColorProperty = RegisterProperty("BtnPidColor", typeof(string), Colors.Aqua.ToString());
 
         /// <summary>
         /// Gets or sets the CurrentValue.
@@ -119,39 +146,52 @@ namespace HenneckePentan.ViewModels
         /// Register the RecipeValue property so it is known in the class.
         /// </summary>
         public static readonly PropertyData RecipeValueProperty = RegisterProperty("RecipeValue", typeof(string));
+
+        /// <summary>
+        /// Gets or sets the ReadPumpValue.
+        /// </summary>
+        public string ReadPumpValue
+        {
+            get { return GetValue<string>(ReadPumpValueProperty); }
+            set { SetValue(ReadPumpValueProperty, value); }
+        }
+
+        /// <summary>
+        /// Register the ReadPumpValue property so it is known in the class.
+        /// </summary>
+        public static readonly PropertyData ReadPumpValueProperty = RegisterProperty("ReadPumpValue", typeof(string), null);
+
         #endregion
 
         #region Command
         /// <summary>
-            /// Gets the Connect command.
-            /// </summary>
+        /// Gets the Connect command.
+        /// </summary>
         public Command Connect { get; private set; }
 
         /// <summary>
         /// Method to invoke when the Connect command is executed.
         /// </summary>
         private void OnConnectExecute()
-        {            
-            if(pentanService == null)
+        {
+            if (pentanService == null)
                 pentanService = new PentanService();
-            
-            if (!isConnected)
+
+            if (!pentanService.ConnectionStatus())
             {
                 StatusBarText = pentanService.Connect();
-                isConnected = true;
-                BtnConnectText = "РАЗЪЕДИНИТЬ";
+                if (pentanService.ConnectionStatus()) { OnConnect(); }
             }
             else
             {
                 StatusBarText = pentanService.Disconnect();
-                isConnected = false;
-                BtnConnectText = "ПОДКЛЮЧИТЬ";
+                OnDisconnect();
             }
         }
 
         /// <summary>
-            /// Gets the Pid command.
-            /// </summary>
+        /// Gets the Pid command.
+        /// </summary>
         public Command Pid { get; private set; }
 
         /// <summary>
@@ -159,26 +199,26 @@ namespace HenneckePentan.ViewModels
         /// </summary>
         private void OnPidExecute()
         {
-            if (isConnected)
+            if (pentanService.ConnectionStatus())
             {
-                if (!isEnabled)
+                if (!pentanService.PidStatus())
                 {
                     StatusBarText = pentanService.PidEnable();
-                    isEnabled = true;
                     BtnPidText = "ВЫКЛЮЧИТЬ";
+                    BtnPidColor = Colors.LimeGreen.ToString();
                 }
                 else
                 {
                     StatusBarText = pentanService.PidDisable();
-                    isEnabled = false;
                     BtnPidText = "ВКЛЮЧИТЬ";
+                    BtnPidColor = Colors.Aqua.ToString();
                 }
             }
         }
 
         /// <summary>
-            /// Gets the CurrentRead command.
-            /// </summary>
+        /// Gets the CurrentRead command.
+        /// </summary>
         public Command CurrentRead { get; private set; }
 
         /// <summary>
@@ -186,12 +226,13 @@ namespace HenneckePentan.ViewModels
         /// </summary>
         private void OnCurrentReadExecute()
         {
-            CurrentValue = pentanService.ReadCurrent();
+            if (pentanService != null)
+                CurrentValue = pentanService.ReadCurrent();
         }
 
         /// <summary>
-            /// Gets the RecipeWrite command.
-            /// </summary>
+        /// Gets the RecipeWrite command.
+        /// </summary>
         public Command RecipeWrite { get; private set; }
 
         /// <summary>
@@ -199,7 +240,52 @@ namespace HenneckePentan.ViewModels
         /// </summary>
         private void OnRecipeWriteExecute()
         {
-            // TODO: Handle command logic here
+            if (pentanService != null)
+                StatusBarText = pentanService.WriteRecipe(RecipeValue);
+        }
+
+        #endregion
+
+        #region Methods
+        /// <summary>
+        /// On connected method
+        /// </summary>
+        private void OnConnect()
+        {
+            BtnPidText = pentanService.PidStatus() ? "ВЫКЛЮЧИТЬ" : "ВКЛЮЧИТЬ";
+            BtnPidColor = pentanService.PidStatus() ? Colors.LimeGreen.ToString() : Colors.Aqua.ToString();
+
+            BtnConnectText = "РАЗЪЕДИНИТЬ";
+            BtnConnectColor = Colors.LimeGreen.ToString();
+
+            if (monitorTimer == null)
+            {
+                monitorTimer = new Timer(500);
+                monitorTimer.Elapsed += new ElapsedEventHandler(OnTimedEvent);
+            }
+            monitorTimer.Enabled = true;
+        }
+        /// <summary>
+        /// On diconnect method
+        /// </summary>
+        private void OnDisconnect()
+        {
+            BtnConnectText = "ПОДКЛЮЧИТЬ";
+            BtnConnectColor = Colors.Aqua.ToString();
+            if (monitorTimer != null) { monitorTimer.Enabled = false; }
+        }
+        #endregion
+
+        #region Events
+        /// <summary>
+        /// On timer elapsed event
+        /// </summary>
+        /// <param name="source"></param>
+        /// <param name="e"></param>
+        private void OnTimedEvent(object source, ElapsedEventArgs e)
+        {
+            CurrentValue = pentanService.ReadCurrent();
+            ReadPumpValue = pentanService.ReadPumpRate();
         }
         #endregion
     }
